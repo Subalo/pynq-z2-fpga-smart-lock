@@ -2,6 +2,8 @@
 
 A final-year electrical engineering project implementing a keypad-controlled lock prototype on the PYNQ-Z2. The Vivado design integrates a VHDL keypad controller, a packaged stepper motor controller, and AXI GPIO through the Zynq-7000 processing system.
 
+I tested the Smart Lock system on a physical PYNQ-Z2 board and confirmed that it works.
+
 [Project portfolio](https://subalo.github.io/portfolio-/#projects) · [Report](https://subalo.github.io/portfolio-/assets/docs/smart-lock-report.pdf) · [Poster](https://subalo.github.io/portfolio-/assets/docs/smart-lock-poster.pdf) · [Presentation](https://subalo.github.io/portfolio-/assets/docs/smart-lock-presentation.pptx)
 
 ## Repository layout
