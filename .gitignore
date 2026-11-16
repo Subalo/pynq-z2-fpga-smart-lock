@@ -1,0 +1,26 @@
+# Vivado-generated outputs and local state
+.Xil/
+*.cache/
+*.gen/
+*.hw/
+*.runs/
+*.sim/
+*.tmp/
+*.ip_user_files/
+ipshared/
+*.jou
+*.log
+*.str
+*.wdb
+*.dcp
+*.bit
+*.hwh
+*.xsa
+*.zip
+
+# Local editor and Python files
+.vscode/
+__pycache__/
+.venv/
+.env
+.env.*
