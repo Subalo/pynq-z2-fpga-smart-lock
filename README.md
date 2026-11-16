@@ -28,7 +28,7 @@ The Zynq processing system runs the Python application and communicates with the
 | `VHDL_03/keypad_test/` | Keypad hardware test project |
 | `VHDL_03/motor_gpio_direct_test/` | Direct GPIO motor hardware test project |
 | `Python_04/` | PYNQ application notebook for the keypad, camera, lock actuator, and optional Telegram alerts |
-| `docs/hardware.md` | Physical connector diagram and FPGA pin assignments |
+| `docs/hardware.md` | Connector diagram, FPGA pin assignments, and prototype power and ground wiring |
 | `docs/simulation/` | Simulation screenshots and a motor block diagram |
 
 ## Open the FPGA design

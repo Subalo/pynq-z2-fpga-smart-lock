@@ -21,7 +21,47 @@ flowchart LR
     board -->|"Arduino D3–D7"| indicators
 ```
 
-The FPGA interfaces below use 3.3 V logic. Use the ULN2003 driver for the motor and a compatible interface for the relay or other loads. Check the supply and signal levels for your specific modules before connecting them. The diagram covers signal routing. For module power and ground, use the corresponding component documentation. [PYNQ-Z2 reference manual](https://www.mouser.com/datasheet/2/744/pynqz2_user_manual_v1_0-1525725.pdf)
+## Power and ground
+
+The prototype used the PYNQ-Z2 as the source for both supply rails and the common ground. The rail assignments below are based on the project author's recollection of the assembled prototype. The exact header contacts used to take 5 V, 3.3 V, and GND from the board were not recorded.
+
+```mermaid
+flowchart LR
+    board["PYNQ-Z2"]
+    five["5 V rail"]
+    three["3.3 V rail"]
+    ground["Common ground"]
+    driver["ULN2003 driver"]
+    loads["Relay module and buzzer"]
+    sensors["PIR and LM393 light sensor modules"]
+    motor["28BYJ-48 motor"]
+    camera["USB camera"]
+    board --> five
+    five --> driver
+    five --> loads
+    board --> three --> sensors
+    board --> ground
+    driver --> ground
+    loads --> ground
+    sensors --> ground
+    driver -->|"Motor connector"| motor
+    board -->|"USB data, power and ground"| camera
+```
+
+| Component | Supply used | Ground or return |
+| --- | --- | --- |
+| ULN2003 motor driver | Board 5 V | Board GND |
+| 28BYJ-48 stepper | Through the 5 V-powered ULN2003 driver module | Through the driver module and motor connector |
+| Lighting relay module | Board 5 V on the module's control side | Board GND on the module's control side. Load-side wiring was not recorded. |
+| Buzzer | Board 5 V | Board GND reference. The exact drive and return wiring was not recorded. |
+| PIR motion sensor | Board 3.3 V | Board GND |
+| LM393 light sensor module | Board 3.3 V | Board GND |
+| Motion, unlocked, and locked LEDs | 3.3 V logic on D3, D5, and D6 | Board GND reference. Series resistor values and exact placement were not recorded. |
+| MC-38 magnetic door sensor | Passive contact. D2 uses the 3.3 V logic domain. | The exact switch-to-GND connection and bias resistor arrangement were not recorded. |
+| 4×4 matrix keypad | Passive row and column matrix on PMOD B | Uses the eight matrix signal wires. The XDC enables FPGA pull-ups on the row inputs. |
+| Logitech Brio 300 camera | PYNQ-Z2 USB host port | Through the USB cable |
+
+The FPGA header signals use 3.3 V logic, including the control signals to the 5 V peripherals. Check the signal levels and interfaces of the specific modules before recreating the circuit. [PYNQ-Z2 reference manual](https://www.mouser.com/datasheet/2/744/pynqz2_user_manual_v1_0-1525725.pdf)
 
 ## PMOD A and PMOD B
 
