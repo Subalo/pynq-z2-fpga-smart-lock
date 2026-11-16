@@ -26,12 +26,12 @@ A final-year electrical engineering project implementing a keypad-controlled loc
 ## Run the application on PYNQ-Z2
 
 1. Boot the board with its PYNQ image and open Jupyter. Copy [FINAL_SMART_LOCK_SYSTEM.ipynb](Python_04/FINAL_SMART_LOCK_SYSTEM.ipynb) into a dedicated directory. The Python kernel needs `pynq`, `requests`, and an OpenCV build with `cv2.face.LBPHFaceRecognizer_create`. Connect the camera and wire the project peripherals according to the report.
-2. Add the following files to the notebook directory.
+2. Download both overlay files from the [v1.0.0 release](https://github.com/Subalo/smart-lock-fpga/releases/tag/v1.0.0) and place them alongside the notebook. The prebuilt overlay lets you skip the Vivado build. Add the remaining files as described below.
 
    | File | Source |
    | --- | --- |
-   | `design_1.bit` | Build the main Vivado project, then copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
-   | `design_1.hwh` | From the same Vivado build, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh`. Keep it beside the bitstream with the same base name. |
+   | `design_1.bit` | [Download the prebuilt bitstream](https://github.com/Subalo/smart-lock-fpga/releases/download/v1.0.0/design_1.bit). If rebuilding, copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
+   | `design_1.hwh` | [Download the matching hardware handoff](https://github.com/Subalo/smart-lock-fpga/releases/download/v1.0.0/design_1.hwh). If rebuilding, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh` from the same build as the bitstream. Keep both files together with the same base name. |
    | `trainer.yml` | Supply an OpenCV LBPH model trained on your authorized user's images. The notebook expects that user's label to match `AUTHORIZED_USER_ID` (default `1`). Keep the trained model and training images private. |
    | `haarcascade_frontalface_default.xml` | Copy the OpenCV face detector XML into this directory if it is unavailable in the board's OpenCV or PYNQ data directory. |
 
