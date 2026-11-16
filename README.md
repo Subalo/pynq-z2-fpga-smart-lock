@@ -6,13 +6,13 @@ I tested the Smart Lock system on a physical PYNQ-Z2 board and confirmed that it
 
 [Hardware and wiring](docs/hardware.md) · [PYNQ-Z2 setup](#run-the-application-on-pynq-z2) · [Prebuilt overlay](https://github.com/Subalo/smart-lock-fpga/releases/tag/v1.0.0) · [Portfolio](https://subalo.github.io/portfolio-/#smart-lock)
 
-<img src="docs/media/smart-lock-prototype.jpg" alt="Smart Lock prototype with the PYNQ-Z2 board, USB camera, keypad, and breadboard peripherals" width="500">
+![Vivado block design showing the Zynq processing system, AXI GPIO, keypad controller, and stepper motor IP](docs/media/vivado-block-design.png)
 
 ## Design and verification
 
 The Zynq processing system runs the Python application and communicates with the programmable logic through AXI GPIO. The door sensor lets the system track when the door closes so it can relock after an authorized opening.
 
-- [Vivado block design](docs/media/vivado-block-design.png) shows the processing system, GPIO blocks, keypad controller, and motor IP.
+- [Prototype photograph](docs/media/smart-lock-prototype.jpg) shows the PYNQ-Z2, USB camera, keypad, and breadboard peripherals.
 - [Stepper simulation](docs/media/stepper-simulation.png) shows reset, direction enables, and the four motor phase signals. The [simulation folder](docs/simulation) contains additional captures.
 - A clean Vivado 2019.1 build of the FPGA sources at [`033ff01`](https://github.com/Subalo/smart-lock-fpga/commit/033ff01) produced the released overlay. Implementation reported zero DRC violations and zero routing errors. The configured timing constraints passed with a setup margin of 1.878 ns and a hold margin of 0.067 ns. The timing report also identified paths and I/O without assigned delay constraints.
 
