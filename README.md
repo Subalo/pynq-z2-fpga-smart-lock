@@ -14,6 +14,7 @@ The Zynq processing system runs the Python application and communicates with the
 
 - [Prototype photograph](docs/media/smart-lock-prototype.jpg) shows the PYNQ-Z2, USB camera, keypad, and breadboard peripherals.
 - [Stepper simulation](docs/media/stepper-simulation.png) shows reset, direction enables, and the four motor phase signals. The [simulation folder](docs/simulation) contains additional captures.
+- In Vivado Simulator 2019.1, the keypad testbench passed its assertions. The clock-divider, clockwise, counterclockwise, and integrated motor testbenches ran to their scheduled end without simulation errors.
 - A clean Vivado 2019.1 build of the FPGA sources at [`033ff01`](https://github.com/Subalo/smart-lock-fpga/commit/033ff01) produced the released overlay. Implementation reported zero DRC violations and zero routing errors. The configured timing constraints passed with a setup margin of 1.878 ns and a hold margin of 0.067 ns. The timing report also identified paths and I/O without assigned delay constraints.
 
 [Project report (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-report.pdf) · [Poster (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-poster.pdf) · [Presentation (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-presentation.pptx)
@@ -53,8 +54,8 @@ Select the diagram to view it at full size. The [hardware guide](docs/hardware.m
    | --- | --- |
    | `design_1.bit` | [Download the prebuilt bitstream](https://github.com/Subalo/smart-lock-fpga/releases/download/v1.0.0/design_1.bit). If rebuilding, copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
    | `design_1.hwh` | [Download the matching hardware handoff](https://github.com/Subalo/smart-lock-fpga/releases/download/v1.0.0/design_1.hwh). If rebuilding, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh` from the same build as the bitstream. Keep both files together with the same base name. |
-   | `trainer.yml` | Supply an OpenCV LBPH model trained on your authorized user's images. The notebook expects that user's label to match `AUTHORIZED_USER_ID` (default `1`). Keep the trained model and training images private. |
-   | `haarcascade_frontalface_default.xml` | Copy the OpenCV face detector XML into this directory if it is unavailable in the board's OpenCV or PYNQ data directory. |
+   | `trainer.yml` | Use your own LBPH model or [train one locally](#create-the-local-face-model). The notebook loads this file during startup, even if you only intend to test the keypad. |
+   | `haarcascade_frontalface_default.xml` | If the detector is absent from the board's OpenCV or PYNQ data directory, [download the detector XML from OpenCV](https://raw.githubusercontent.com/opencv/opencv/4.13.0/data/haarcascades/haarcascade_frontalface_default.xml) and place it beside the notebook. |
 
 3. Create `smart_lock.local.json` in the same directory. Replace `SET_YOUR_CODE` with 1–8 digits, keeping the quotes so that leading zeros are preserved. Leave both Telegram fields empty to disable notifications.
 
@@ -68,4 +69,30 @@ Select the diagram to view it at full size. The [hardware guide](docs/hardware.m
 
 4. Open the notebook in Jupyter from that directory and run the setup cell, then the start cell. Wait for `System is ready.` before testing the keypad or camera. Stop the running cell to end the program. The access log and captured images are saved locally beside the notebook.
 
-[PYNQ overlay documentation](https://pynq.readthedocs.io/en/latest/pynq_overlays/loading_an_overlay.html) · [OpenCV LBPH documentation](https://docs.opencv.org/4.13.0/df/d25/classcv_1_1face_1_1LBPHFaceRecognizer.html)
+[PYNQ overlay documentation](https://pynq.readthedocs.io/en/latest/pynq_overlays/loading_an_overlay.html)
+
+### Create the local face model
+
+Save a few tightly cropped face photos of the person who will enroll, with their permission, as JPG files in `~/smart-lock-private/face-crops`. Run the following in a separate Python session with NumPy and OpenCV's `cv2.face` module, from the notebook directory. Label `1` matches the notebook's default `AUTHORIZED_USER_ID`.
+
+```python
+from pathlib import Path
+
+import cv2
+import numpy as np
+
+photo_dir = Path.home() / "smart-lock-private" / "face-crops"
+photos = sorted(photo_dir.glob("*.jpg"))
+if not photos:
+    raise FileNotFoundError(f"Add JPG face crops to {photo_dir}")
+
+faces = [cv2.imread(str(photo), cv2.IMREAD_GRAYSCALE) for photo in photos]
+if any(face is None for face in faces):
+    raise ValueError("One or more face photos could not be read")
+
+recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer.train(faces, np.full(len(faces), 1, dtype=np.int32))
+recognizer.write("trainer.yml")
+```
+
+Keep the photos and trained model private. Test recognition under your own camera and lighting conditions before relying on the prototype. [OpenCV LBPH documentation](https://docs.opencv.org/4.13.0/df/d25/classcv_1_1face_1_1LBPHFaceRecognizer.html)
