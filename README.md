@@ -13,6 +13,7 @@ A final-year electrical engineering project implementing a keypad-controlled loc
 | `VHDL_03/KEYPADTESTNEW/` | Standalone keypad RTL and testbench |
 | `VHDL_03/keypad_test/` | Keypad hardware test project |
 | `VHDL_03/motor_gpio_direct_test/` | Direct GPIO motor hardware test project |
+| `Python_04/` | PYNQ application notebook for the keypad, camera, lock actuator, and optional Telegram alerts |
 | `docs/simulation/` | Simulation screenshots and a motor block diagram |
 
 ## Open the FPGA design
@@ -22,4 +23,28 @@ A final-year electrical engineering project implementing a keypad-controlled loc
 3. Validate the block design and regenerate its output products. Run synthesis and implementation, then generate the bitstream for the board.
 4. For behavioral simulation, open [step_motor_controller.xpr](VHDL_03/step_motor_controller/step_motor_controller.xpr) or [KEYPADTESTNEW.xpr](VHDL_03/KEYPADTESTNEW/KEYPADTESTNEW.xpr), choose the relevant testbench as the simulation top, and select **Run Behavioral Simulation**. Reference captures are in [docs/simulation](docs/simulation).
 
-This snapshot contains the FPGA sources and project configuration. The supplied project folder had no Python or Jupyter application files, so reproducing any processor-side behavior described in the report requires the original application separately.
+## Run the application on PYNQ-Z2
+
+1. Boot the board with its PYNQ image and open Jupyter. Copy [FINAL_SMART_LOCK_SYSTEM.ipynb](Python_04/FINAL_SMART_LOCK_SYSTEM.ipynb) into a dedicated directory. The Python kernel needs `pynq`, `requests`, and an OpenCV build with `cv2.face.LBPHFaceRecognizer_create`. Connect the camera and wire the project peripherals according to the report.
+2. Add the following files to the notebook directory.
+
+   | File | Source |
+   | --- | --- |
+   | `design_1.bit` | Build the main Vivado project, then copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
+   | `design_1.hwh` | From the same Vivado build, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh`. Keep it beside the bitstream with the same base name. |
+   | `trainer.yml` | Supply an OpenCV LBPH model trained on your authorized user's images. The notebook expects that user's label to match `AUTHORIZED_USER_ID` (default `1`). Keep the trained model and training images private. |
+   | `haarcascade_frontalface_default.xml` | Copy the OpenCV face detector XML into this directory if it is unavailable in the board's OpenCV or PYNQ data directory. |
+
+3. Create `smart_lock.local.json` in the same directory. Replace `SET_YOUR_CODE` with 1–8 digits, keeping the quotes so that leading zeros are preserved. Leave both Telegram fields empty to disable notifications.
+
+   ```json
+   {
+     "keypad_code": "SET_YOUR_CODE",
+     "telegram_bot_token": "",
+     "telegram_chat_id": ""
+   }
+   ```
+
+4. Open the notebook in Jupyter from that directory and run the setup cell, then the start cell. Wait for `System is ready.` before testing the keypad or camera. Stop the running cell to end the program. The access log and captured images are saved locally beside the notebook.
+
+[PYNQ overlay documentation](https://pynq.readthedocs.io/en/latest/pynq_overlays/loading_an_overlay.html) · [OpenCV LBPH documentation](https://docs.opencv.org/4.13.0/df/d25/classcv_1_1face_1_1LBPHFaceRecognizer.html)

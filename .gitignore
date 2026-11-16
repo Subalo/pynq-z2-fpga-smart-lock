@@ -24,3 +24,14 @@ __pycache__/
 .venv/
 .env
 .env.*
+
+# Local Smart Lock settings, model, and runtime data
+smart_lock.local.json
+trainer.yml
+haarcascade_frontalface_default.xml
+smart_lock_access_log.csv
+smart_lock_captured.jpg
+smart_lock_result.jpg
+unknown_person.jpg
+keypad_intruder.jpg
+.ipynb_checkpoints/
