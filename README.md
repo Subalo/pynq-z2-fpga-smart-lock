@@ -95,4 +95,4 @@ recognizer.train(faces, np.full(len(faces), 1, dtype=np.int32))
 recognizer.write("trainer.yml")
 ```
 
-Keep the photos and trained model private. Test recognition under your own camera and lighting conditions before relying on the prototype. [OpenCV LBPH documentation](https://docs.opencv.org/4.13.0/df/d25/classcv_1_1face_1_1LBPHFaceRecognizer.html)
+Keep the photos and trained model private. Test recognition under your own camera and lighting conditions before relying on the prototype. [OpenCV face recognizer API reference](https://github.com/opencv/opencv_contrib/blob/4.13.0/modules/face/include/opencv2/face/facerec.hpp)

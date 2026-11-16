@@ -61,7 +61,7 @@ flowchart LR
 | 4×4 matrix keypad | Passive row and column matrix on PMOD B | Uses the eight matrix signal wires. The XDC enables FPGA pull-ups on the row inputs. |
 | Logitech Brio 300 camera | PYNQ-Z2 USB host port | Through the USB cable |
 
-The FPGA header signals use 3.3 V logic, including the control signals to the 5 V peripherals. Check the signal levels and interfaces of the specific modules before recreating the circuit. [PYNQ-Z2 reference manual](https://www.mouser.com/datasheet/2/744/pynqz2_user_manual_v1_0-1525725.pdf)
+The FPGA header signals use 3.3 V logic, including the control signals to the 5 V peripherals. Check the signal levels and interfaces of the specific modules before recreating the circuit. [PYNQ-Z2 reference manual](https://dpoauwgwqsy2x.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf)
 
 ## PMOD A and PMOD B
 
