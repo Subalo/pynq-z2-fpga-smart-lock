@@ -4,7 +4,7 @@ A final-year electrical engineering project built on the PYNQ-Z2. The prototype 
 
 I tested the Smart Lock system on a physical PYNQ-Z2 board and confirmed that it works.
 
-[Hardware and wiring](docs/hardware.md) · [PYNQ-Z2 setup](#run-the-application-on-pynq-z2) · [Prebuilt overlay](https://github.com/Subalo/pynq-z2-smart-lock/releases/tag/v1.0.0) · [Portfolio](https://subalo.github.io/portfolio-/#smart-lock)
+[Hardware and wiring](docs/hardware.md) · [PYNQ-Z2 setup](#run-the-application-on-pynq-z2) · [Prebuilt overlay](https://github.com/Subalo/pynq-z2-fpga-smart-lock/releases/tag/v1.0.0) · [Portfolio](https://subalo.github.io/portfolio-/#smart-lock)
 
 ![Vivado block design showing the Zynq processing system, AXI GPIO, keypad controller, and stepper motor IP](docs/media/vivado-block-design.png)
 
@@ -15,7 +15,7 @@ The Zynq processing system runs the Python application and communicates with the
 - [Prototype photograph](docs/media/smart-lock-prototype.jpg) shows the PYNQ-Z2, USB camera, keypad, and breadboard peripherals.
 - [Stepper simulation](docs/media/stepper-simulation.png) shows reset, direction enables, and the four motor phase signals. The [simulation folder](docs/simulation) contains additional captures.
 - In Vivado Simulator 2019.1, the keypad testbench passed its assertions. The clock-divider, clockwise, counterclockwise, and integrated motor testbenches ran to their scheduled end without simulation errors.
-- A clean Vivado 2019.1 build of the FPGA sources at [`033ff01`](https://github.com/Subalo/pynq-z2-smart-lock/commit/033ff01) produced the released overlay. Implementation reported zero DRC violations and zero routing errors. The configured timing constraints passed with a setup margin of 1.878 ns and a hold margin of 0.067 ns. The timing report also identified paths and I/O without assigned delay constraints.
+- A clean Vivado 2019.1 build of the FPGA sources at [`033ff01`](https://github.com/Subalo/pynq-z2-fpga-smart-lock/commit/033ff01) produced the released overlay. Implementation reported zero DRC violations and zero routing errors. The configured timing constraints passed with a setup margin of 1.878 ns and a hold margin of 0.067 ns. The timing report also identified paths and I/O without assigned delay constraints.
 
 [Project report (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-report.pdf) · [Poster (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-poster.pdf) · [Presentation (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-presentation.pptx)
 
@@ -48,12 +48,12 @@ Select the diagram to view it at full size. The [hardware guide](docs/hardware.m
 ## Run the application on PYNQ-Z2
 
 1. Boot the board with its PYNQ image and open Jupyter. Copy [FINAL_SMART_LOCK_SYSTEM.ipynb](Python_04/FINAL_SMART_LOCK_SYSTEM.ipynb) into a dedicated directory. The Python kernel needs `pynq`, `requests`, and an OpenCV build with `cv2.face.LBPHFaceRecognizer_create`. Connect the camera and peripherals using the [hardware wiring guide](docs/hardware.md).
-2. Download both overlay files from the [v1.0.0 release](https://github.com/Subalo/pynq-z2-smart-lock/releases/tag/v1.0.0) and place them alongside the notebook. The prebuilt overlay lets you skip the Vivado build. Add the remaining files as described below.
+2. Download both overlay files from the [v1.0.0 release](https://github.com/Subalo/pynq-z2-fpga-smart-lock/releases/tag/v1.0.0) and place them alongside the notebook. The prebuilt overlay lets you skip the Vivado build. Add the remaining files as described below.
 
    | File | Source |
    | --- | --- |
-   | `design_1.bit` | [Download the prebuilt bitstream](https://github.com/Subalo/pynq-z2-smart-lock/releases/download/v1.0.0/design_1.bit). If rebuilding, copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
-   | `design_1.hwh` | [Download the matching hardware handoff](https://github.com/Subalo/pynq-z2-smart-lock/releases/download/v1.0.0/design_1.hwh). If rebuilding, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh` from the same build as the bitstream. Keep both files together with the same base name. |
+   | `design_1.bit` | [Download the prebuilt bitstream](https://github.com/Subalo/pynq-z2-fpga-smart-lock/releases/download/v1.0.0/design_1.bit). If rebuilding, copy `smart_lock.runs/impl_1/design_1_wrapper.bit` as `design_1.bit`. |
+   | `design_1.hwh` | [Download the matching hardware handoff](https://github.com/Subalo/pynq-z2-fpga-smart-lock/releases/download/v1.0.0/design_1.hwh). If rebuilding, copy `smart_lock.srcs/sources_1/bd/design_1/hw_handoff/design_1.hwh` from the same build as the bitstream. Keep both files together with the same base name. |
    | `trainer.yml` | Use your own LBPH model or [train one locally](#create-the-local-face-model). The notebook loads this file during startup, even if you only intend to test the keypad. |
    | `haarcascade_frontalface_default.xml` | If the detector is absent from the board's OpenCV or PYNQ data directory, [download the detector XML from OpenCV](https://raw.githubusercontent.com/opencv/opencv/4.13.0/data/haarcascades/haarcascade_frontalface_default.xml) and place it beside the notebook. |
 
