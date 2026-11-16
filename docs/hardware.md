@@ -63,7 +63,7 @@ flowchart LR
 | Logitech Brio 300 camera | PYNQ-Z2 USB host port | Through the USB cable |
 | Optional Telegram alerts | Board Ethernet port to a router with internet access | Network connection only |
 
-The FPGA header signals use 3.3 V logic, including the control signals to the 5 V peripherals. Check the signal levels and interfaces of the specific modules before recreating the circuit. [PYNQ-Z2 reference manual](https://dpoauwgwqsy2x.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf)
+The FPGA header signals use 3.3 V logic, including the control signals to the 5 V peripherals. [PYNQ-Z2 reference manual](https://dpoauwgwqsy2x.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf)
 
 ## PMOD A and PMOD B
 
@@ -98,37 +98,6 @@ Pin numbers refer to the physical PMOD connector. Direction is relative to the P
 | D7 (AR7) | U17 | `peripheral_outputs[4]` | Output | Lighting relay control |
 
 The notebook treats a low signal on AR2 as door closed and a high signal as door open. The XDC comment labels this input as an external reset. The final report and notebook assign it to the door sensor.
-
-## Proposed low-voltage rebuild
-
-This is a reference wiring plan for rebuilding the prototype with the same FPGA signal assignments and supply voltages. The pickup points, resistor values, and module interfaces below are proposed choices. The assembled prototype is no longer available to verify those details, and this plan has not been bench-tested.
-
-### Board supply connections
-
-| Rail | Proposed board connection |
-| --- | --- |
-| 5 V | Raspberry Pi header, physical pin 2 |
-| 3.3 V | Arduino power header J7, pin 5 (`3V3`) |
-| Common GND | Arduino power header J7, pin 3 (`GND`) |
-
-Locate pin 1 and verify the rail voltages with a meter before attaching modules. Check that the board power source and headers can supply the combined motor, camera, buzzer, relay, and sensor current with margin. Keep the two positive rails separate. All FPGA signal lines remain in the 3.3 V logic domain. [PYNQ-Z2 reference manual, tables 15, 18 and 22](https://dpoauwgwqsy2x.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf)
-
-### Peripheral connections
-
-| Peripheral | Proposed wiring |
-| --- | --- |
-| ULN2003 driver and 28BYJ-48 | Use the 5 V version of the motor. Connect the driver's 5 V and GND terminals to the corresponding rails. Connect PMOD A pins 1–4 to IN1–IN4 as listed above, and plug the motor into the driver's motor connector. Select a driver module that specifies compatibility with 3.3 V control and includes the motor flyback path. |
-| 4×4 keypad | Connect columns C1–C4 to PMOD B pins 1–4 and rows R1–R4 to pins 7–10. Use a passive matrix keypad with no separate supply connection. Match wires by row and column, since ribbon pin order can vary. |
-| PIR sensor | Connect VCC to 5 V and GND to common GND. The notebook expects a high signal on motion at D0. Verify the module's OUT voltage before connecting it. A 5 V output requires a suitable 5 V-to-3.3 V interface before D0. |
-| LM393 light sensor | With a module rated for a 3.3 V supply, connect VCC to 3.3 V, GND to common GND, and digital output to D1. Verify that the output stays in the 3.3 V domain and goes high in the dark for the notebook's default `DARK_VALUE = 1`. Add a 10 kΩ pull-up to 3.3 V only if the output is open collector and the module lacks an onboard pull-up. |
-| MC-38 door contact | Connect a 10 kΩ pull-up from D2 to 3.3 V. Connect the contact between D2 and GND. With the magnet in the door-closed position, confirm that the contact conducts so the input reads low, matching `DOOR_CLOSED_VALUE = 0`. |
-| Green and red LEDs | Connect the green LED anode to D5 and the red LED anode to D6. Connect each cathode through its own 470 Ω series resistor to GND. Use indicator LEDs with a forward voltage suitable for a 3.3 V output. D3 can drive an optional motion LED via the same circuit. |
-| Buzzer | Use a 5 V, externally driven buzzer module with an onboard driver and a 3.3 V-compatible active-high signal input. Connect VCC to 5 V, GND to common GND, and signal to D4. Select a module that accepts the notebook's nominal 3 kHz tone signal. |
-| Lighting relay | Use a 5 V relay module with an onboard coil driver, flyback protection, and a 3.3 V-compatible active-high input. Connect VCC to 5 V, GND to common GND, and IN to D7. For a low-voltage bench demonstration, connect a current-limited 5 V source to COM, NO to the positive terminal of a rated 5 V lamp, and the lamp return to that source's ground. Keep the load supply separate from the board's 5 V rail. |
-| USB camera | Plug the camera into the PYNQ-Z2 USB host port. The cable carries data, power, and ground. |
-| Optional Telegram alerts | Connect the PYNQ-Z2 Ethernet port to a router with internet access and configure the notebook's local Telegram settings. |
-
-Before attaching the motor or lamp, check the D0–D2 logic levels, verify that each LED follows its output, and confirm that the buzzer and relay remain off at a low input. Check the exact module pinouts against their datasheets. [Texas Instruments ULN2003A reference](https://www.ti.com/product/ULN2003A)
 
 ## Vivado block design
 
