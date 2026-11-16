@@ -96,3 +96,9 @@ recognizer.write("trainer.yml")
 ```
 
 Keep the photos and trained model private. Test recognition under your own camera and lighting conditions before relying on the prototype. [OpenCV face recognizer API reference](https://github.com/opencv/opencv_contrib/blob/4.13.0/modules/face/include/opencv2/face/facerec.hpp)
+
+## License
+
+The project's original Python code, VHDL, testbenches, constraints, and written repository documentation are available under the [MIT License](LICENSE).
+
+Third-party material retains its own terms and notices, including AMD/Xilinx IP and vendor-generated portions of the Vivado project files and HDL wrappers. The prebuilt overlay files, photos, figures, and linked report, poster, and presentation are outside this MIT grant.
