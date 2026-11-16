@@ -18,6 +18,12 @@ The Zynq processing system runs the Python application and communicates with the
 
 [Project report (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-report.pdf) · [Poster (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-poster.pdf) · [Presentation (Hebrew)](https://subalo.github.io/portfolio-/assets/docs/smart-lock-presentation.pptx)
 
+## Prototype wiring
+
+[![Smart Lock wiring diagram with PYNQ-Z2 signal pins, 5 V and 3.3 V rails, common ground, and unknown connections highlighted](docs/media/smart-lock-wiring.png)](docs/media/smart-lock-wiring.png)
+
+Select the diagram to view it at full size. The [hardware guide](docs/hardware.md) lists the pin assignments and power connections in text.
+
 ## Repository layout
 
 | Path | Contents |
