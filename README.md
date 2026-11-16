@@ -57,7 +57,7 @@ Select the diagram to view it at full size. The [hardware guide](docs/hardware.m
    | `trainer.yml` | Use your own LBPH model or [train one locally](#create-the-local-face-model). The notebook loads this file during startup, even if you only intend to test the keypad. |
    | `haarcascade_frontalface_default.xml` | If the detector is absent from the board's OpenCV or PYNQ data directory, [download the detector XML from OpenCV](https://raw.githubusercontent.com/opencv/opencv/4.13.0/data/haarcascades/haarcascade_frontalface_default.xml) and place it beside the notebook. |
 
-3. Create `smart_lock.local.json` in the same directory. Replace `SET_YOUR_CODE` with 1–8 digits, keeping the quotes so that leading zeros are preserved. Leave both Telegram fields empty to disable notifications.
+3. Create `smart_lock.local.json` in the same directory. Replace `SET_YOUR_CODE` with 1–8 digits, keeping the quotes so that leading zeros are preserved. Leave both Telegram fields empty to disable notifications. When enabled, Telegram alerts can include captured images sent to the configured chat.
 
    ```json
    {
@@ -67,7 +67,7 @@ Select the diagram to view it at full size. The [hardware guide](docs/hardware.m
    }
    ```
 
-4. Open the notebook in Jupyter from that directory and run the setup cell, then the start cell. Wait for `System is ready.` before testing the keypad or camera. Stop the running cell to end the program. The access log and captured images are saved locally beside the notebook.
+4. Open the notebook in Jupyter with its directory as the kernel's working directory. Check `Path.cwd()` if the notebook reports a missing local file. Run the setup cell, then the start cell. Wait for `System is ready.` before testing the keypad or camera. Stop the running cell to end the program. The access log and captured images are saved beside the notebook.
 
 [PYNQ overlay documentation](https://pynq.readthedocs.io/en/latest/pynq_overlays/loading_an_overlay.html)
 
