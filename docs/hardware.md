@@ -97,6 +97,36 @@ Pin numbers refer to the physical PMOD connector. Direction is relative to the P
 
 The notebook treats a low signal on AR2 as door closed and a high signal as door open. The XDC comment labels this input as an external reset. The final report and notebook assign it to the door sensor.
 
+## Proposed low-voltage rebuild
+
+This is a reference wiring plan for rebuilding the prototype with the same FPGA signal assignments and supply voltages. The pickup points, resistor values, and module interfaces below are proposed choices. The assembled prototype is no longer available to verify those details, and this plan has not been bench-tested.
+
+### Board supply connections
+
+| Rail | Proposed board connection |
+| --- | --- |
+| 5 V | Raspberry Pi header, physical pin 2 |
+| 3.3 V | Arduino power header J7, pin 5 (`3V3`) |
+| Common GND | Arduino power header J7, pin 3 (`GND`) |
+
+Locate pin 1 and verify the rail voltages with a meter before attaching modules. Check that the board power source and headers can supply the combined motor, camera, buzzer, relay, and sensor current with margin. Keep the two positive rails separate. All FPGA signal lines remain in the 3.3 V logic domain. [PYNQ-Z2 reference manual, tables 15, 18 and 22](https://dpoauwgwqsy2x.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf)
+
+### Peripheral connections
+
+| Peripheral | Proposed wiring |
+| --- | --- |
+| ULN2003 driver and 28BYJ-48 | Use the 5 V version of the motor. Connect the driver's 5 V and GND terminals to the corresponding rails. Connect PMOD A pins 1–4 to IN1–IN4 as listed above, and plug the motor into the driver's motor connector. Select a driver module that specifies compatibility with 3.3 V control and includes the motor flyback path. |
+| 4×4 keypad | Connect columns C1–C4 to PMOD B pins 1–4 and rows R1–R4 to pins 7–10. Use a passive matrix keypad with no separate supply connection. Match wires by row and column, since ribbon pin order can vary. |
+| PIR sensor | Use a PIR module specified for a 3.3 V supply and 3.3 V output. Connect VCC to 3.3 V, GND to common GND, and OUT to D0. The notebook expects a high signal on motion. |
+| LM393 light sensor | With a module rated for a 3.3 V supply, connect VCC to 3.3 V, GND to common GND, and digital output to D1. Verify that the output stays in the 3.3 V domain and goes high in the dark for the notebook's default `DARK_VALUE = 1`. Add a 10 kΩ pull-up to 3.3 V only if the output is open collector and the module lacks an onboard pull-up. |
+| MC-38 door contact | Connect a 10 kΩ pull-up from D2 to 3.3 V. Connect the contact between D2 and GND. With the magnet in the door-closed position, confirm that the contact conducts so the input reads low, matching `DOOR_CLOSED_VALUE = 0`. |
+| Motion, unlocked and locked LEDs | Wire each output (D3, D5, D6) through its own 470 Ω series resistor to the LED anode. Connect each cathode to GND. Use indicator LEDs with a forward voltage suitable for a 3.3 V output. |
+| Buzzer | Use a 5 V, externally driven buzzer module with an onboard driver and a 3.3 V-compatible active-high signal input. Connect VCC to 5 V, GND to common GND, and signal to D4. Select a module that accepts the notebook's nominal 3 kHz tone signal. |
+| Lighting relay | Use a 5 V relay module with an onboard coil driver, flyback protection, and a 3.3 V-compatible active-high input. Connect VCC to 5 V, GND to common GND, and IN to D7. For a low-voltage bench demonstration, connect a current-limited 5 V source to COM, NO to the positive terminal of a rated 5 V lamp, and the lamp return to that source's ground. Keep the load supply separate from the board's 5 V rail. |
+| USB camera | Plug the camera into the PYNQ-Z2 USB host port. The cable carries data, power, and ground. |
+
+Before attaching the motor or lamp, check the D0–D2 logic levels, verify that each LED follows its output, and confirm that the buzzer and relay remain off at a low input. Check the exact module pinouts against their datasheets. [Texas Instruments ULN2003A reference](https://www.ti.com/product/ULN2003A)
+
 ## Vivado block design
 
 The AXI interconnect connects the Zynq processing system to three GPIO blocks. `keypad_status_gpio` carries the keypad state, `motor_control_gpio` drives the motor controller inputs, and `peripherals_gpio` carries the sensor inputs and indicator outputs.
